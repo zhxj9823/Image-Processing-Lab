@@ -117,6 +117,7 @@ int main(int, char**)
 
         glfwMakeContextCurrent(window);
         glfwSwapBuffers(window);
+		glfwSetWindowShouldClose(window, !show_window);
     }
 
     // Cleanup
