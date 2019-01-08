@@ -155,9 +155,9 @@ void ImGui::MyShow(bool *show_window)
 	std::string current_file;
 	std::vector<std::string> temp_images;
 
-	AdjustRGB RGBAdjuster("R", "G", "B");
-	AdjustHSL HSLAdjuster("H", "S", "L");
-	AdjustYUV YUVAdjuster("Y", "U", "V");
+	static AdjustRGB RGBAdjuster("R", "G", "B");
+	static AdjustHSL HSLAdjuster("H", "S", "L");
+	static AdjustYUV YUVAdjuster("Y", "U", "V");
 
 	static int opened = 0;
 	if (!opened && open_file)
