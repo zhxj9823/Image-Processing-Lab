@@ -14,14 +14,86 @@
 #include <vector>
 #include <string>
 
+class AdjustColor
+{
+public:
+	void virtual render(std::string filename, bool *p_open)
+	{
+		ImGui::Begin((name1+name2+name3+"Change").c_str(),p_open, ImGuiWindowFlags_AlwaysAutoResize);
+		ImGui::SliderFloat(name1.c_str(), &a, -255.0f, 255.0f);
+		ImGui::SliderFloat(name2.c_str(), &b, -255.0f, 255.0f);
+		ImGui::SliderFloat(name3.c_str(), &c, -255.0f, 255.0f);
+
+		Apply(filename, a, b, c);
+
+		ImGui::End();
+	}
+	void virtual Apply(std::string filename, double a,double b,double c) = 0;
+protected:
+	float a, b, c;
+	std::string name1,name2,name3;
+};
+
+class AdjustRGB:public AdjustColor
+{
+public:
+	AdjustRGB(std::string n1, std::string n2, std::string n3)
+	{
+		name1 = n1;
+		name2 = n2;
+		name3 = n3;
+		a = b = c = 0;
+	}
+	void Apply(std::string filename, double a,double b,double c);
+};
+
+void AdjustRGB::Apply(std::string filename, double a,double b,double c)
+{
+	
+}
+
+class AdjustHSL :public AdjustColor
+{
+public:
+	AdjustHSL(std::string n1, std::string n2, std::string n3)
+	{
+		name1 = n1;
+		name2 = n2;
+		name3 = n3;
+		a = b = c = 0;
+	}
+	void Apply(std::string filename, double a, double b, double c);
+};
+
+void AdjustHSL::Apply(std::string filename, double a, double b, double c)
+{
+
+}
+
+class AdjustYUV :public AdjustColor
+{
+public:
+	AdjustYUV(std::string n1, std::string n2, std::string n3)
+	{
+		name1 = n1;
+		name2 = n2;
+		name3 = n3;
+		a = b = c = 0;
+	}
+	void Apply(std::string filename, double a, double b, double c);
+};
+
+void AdjustYUV::Apply(std::string filename, double a, double b, double c)
+{
+
+}
+
+
 static void GetLocation(char *open_file_direction);
 static void ShowImage(char *open_file_direction, bool *p_open);
 static void SaveImage(char *save_file_direction, bool *p_open);
 std::string CreateTempImage(const char *file_direction, const char *new_file_direction);
 static void SetGrayScale(std::string current_file, bool *p_open);
-static void Change_YUV(std::string current_file);
-static void Change_RGB(std::string current_file);
-static void Change_HSL(std::string current_file);
 static void AutoBinarization(std::string current_file);
 std::string LocalBinarization(std::string current_file);
 std::string ManuallyBinarization(std::string current_file);
@@ -83,6 +155,10 @@ void ImGui::MyShow(bool *show_window)
 	std::string current_file;
 	std::vector<std::string> temp_images;
 
+	AdjustRGB RGBAdjuster("R", "G", "B");
+	AdjustHSL HSLAdjuster("H", "S", "L");
+	AdjustYUV YUVAdjuster("Y", "U", "V");
+
 	if (open_file)
 	{
 		GetLocation(open_file_direction);
@@ -111,11 +187,11 @@ void ImGui::MyShow(bool *show_window)
 	if (set_grayscale)
 		SetGrayScale(current_file, &set_grayscale);
 	if (enable_YUV)
-		Change_YUV(current_file);
+		YUVAdjuster.render(current_file, &enable_YUV);
 	if (enable_RGB)
-		Change_RGB(current_file);
+		RGBAdjuster.render(current_file, &enable_RGB);
 	if (enable_HSL)
-		Change_HSL(current_file);
+		HSLAdjuster.render(current_file, &enable_HSL);
 	if (enable_auto_binarization)
 		AutoBinarization(current_file);
 	if (enable_local_binarization)
@@ -407,20 +483,6 @@ static void Change_YUV(std::string current_file)
 	ImGui::SliderFloat("V", &v, -255.0f, 255.0f);
 
 	//Do something--- parameter:YUV current_file
-
-	ImGui::End();
-}
-
-static void Change_RGB(std::string current_file)
-{	
-	float r, g, b;
-	ImGui::Begin("RGB Change");
-
-	ImGui::SliderFloat("R", &r, 0.0f, 255.0f);
-	ImGui::SliderFloat("G", &g, 0.0f, 255.0f);
-	ImGui::SliderFloat("B", &b, 0.0f, 255.0f);
-
-	//Do something
 
 	ImGui::End();
 }
