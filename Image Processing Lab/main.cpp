@@ -85,6 +85,7 @@ int main(int, char**)
     //ImGui::StyleColorsClassic();    
 
 	bool show_window = true;
+
     ImVec4 clear_color = ImVec4(0.3f, 0.3f, 0.3f, 1.0f);
 	middle.init();
     // Main loop
@@ -119,7 +120,10 @@ int main(int, char**)
 
         glfwMakeContextCurrent(window);
         glfwSwapBuffers(window);
-		glfwSetWindowShouldClose(window, !show_window);
+		if(!show_window)
+		{
+			glfwSetWindowShouldClose(window, GLFW_TRUE);
+		}		
     }
 
     // Cleanup

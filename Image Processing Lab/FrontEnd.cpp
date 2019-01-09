@@ -63,7 +63,7 @@ void ImGui::MyShow(bool *show_window)
 
 	
 	static char save_file_direction[1024];
-	
+
 	static AdjustRGB RGBAdjuster(&middle);
 	static AdjustHSL HSLAdjuster(&middle);
 	static AdjustYUV YUVAdjuster(&middle);
@@ -82,14 +82,14 @@ void ImGui::MyShow(bool *show_window)
 	
 	static int saved = 0;
 	if (!saved && save_file)
+
 	{
 		GetSaveFileLocation(save_file_direction);		
-		if (!saved && save_file_direction[0] != 0)
+		if (save_file_direction[0] != 0)
 		{
-			std::cout << save_file_direction << std::endl;			
-			save_file = false;
-			saved = 1;
+			std::cout << save_file_direction << std::endl;
 		}
+		save_file = false;
 	}
 
 	if (show_image)
