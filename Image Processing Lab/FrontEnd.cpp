@@ -159,8 +159,7 @@ void ImGui::MyShow(bool *show_window)
 	static AdjustHSL HSLAdjuster("H", "S", "L");
 	static AdjustYUV YUVAdjuster("Y", "U", "V");
 
-	static int opened = 0;
-	if (!opened && open_file)
+	if (open_file)
 	{
 		GetOpenFileLocation(open_file_direction);
 		
@@ -168,22 +167,20 @@ void ImGui::MyShow(bool *show_window)
 		{
 			std::cout << open_file_direction << std::endl;
 			// current_file = CreateTempImage(open_file_direction, "temp.bmp");
-			temp_images.push_back(current_file);
-			open_file = false;
+			temp_images.push_back(current_file);			
 			show_image = true;
-			opened = 1;
 		}
+		open_file = false;
 	}
-	static int saved = 0;
-	if (!saved && save_file)
+
+	if (save_file)
 	{
 		GetSaveFileLocation(save_file_direction);		
-		if (!saved && save_file_direction[0] != 0)
+		if (save_file_direction[0] != 0)
 		{
-			std::cout << save_file_direction << std::endl;			
-			save_file = false;
-			saved = 1;
+			std::cout << save_file_direction << std::endl;
 		}
+		save_file = false;
 	}
 
 	if (show_image)
