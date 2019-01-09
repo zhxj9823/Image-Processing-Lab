@@ -16,6 +16,12 @@
     <Filter Include="imgui">
       <UniqueIdentifier>{885a1c24-e404-4b6b-891d-d36daeb49c9a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="backend">
+      <UniqueIdentifier>{901a440f-be74-459d-8d0f-01fefe74e7d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SubWindows">
+      <UniqueIdentifier>{b06f7d8c-0aec-4925-abb6-57580ef7acc8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -41,6 +47,48 @@
     </ClInclude>
     <ClInclude Include="imgui\imstb_truetype.h">
       <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\bitmap\bmp.h">
+      <Filter>backend</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\bitmap\pixel_accessor.h">
+      <Filter>backend</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\process\binarization.h">
+      <Filter>backend</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\process\color_space.h">
+      <Filter>backend</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\process\filter.h">
+      <Filter>backend</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\process\geometric.h">
+      <Filter>backend</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\process\historgram.h">
+      <Filter>backend</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\process\logarithmic.h">
+      <Filter>backend</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\process\morphological_operation.h">
+      <Filter>backend</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\utils\counter.h">
+      <Filter>backend</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\utils\matrix.h">
+      <Filter>backend</Filter>
+    </ClInclude>
+    <ClInclude Include="Middle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AdjustColorWindow.h">
+      <Filter>SubWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="ImmediateOperation.h">
+      <Filter>SubWindows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +121,12 @@
     </ClCompile>
     <ClCompile Include="stb_image.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="backend\bitmap\bmp.cpp">
+      <Filter>backend</Filter>
+    </ClCompile>
+    <ClCompile Include="backend\process\binarization.cpp">
+      <Filter>backend</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
