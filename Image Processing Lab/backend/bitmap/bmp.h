@@ -41,7 +41,7 @@ namespace bmp
 
 	using color_t = std::tuple<uint8_t, uint8_t, uint8_t>;
 	using yuv_t = std::tuple<double, double, double>;
-	using hsl_t = std::tuple<uint8_t, uint8_t, uint8_t>;
+	using hsl_t = std::tuple<double, double, double>;
 
 	inline uint8_t clip(double x) noexcept {
 		return static_cast<uint8_t>(std::clamp(x, 0.0, 255.0));

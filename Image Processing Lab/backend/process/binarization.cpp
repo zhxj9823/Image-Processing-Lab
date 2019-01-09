@@ -13,6 +13,7 @@ using utils::counter_2d;
 
 namespace process
 {
+	
 	void process::grayscale(bmp::bitmap_t & image) noexcept {
 		std::for_each(std::execution::par_unseq,
 			counter_2d<size_t>::begin(0, 0, image.width, image.height),
@@ -46,10 +47,7 @@ namespace process
 		});
 	}
 
-	template<typename U>
-	void binarize(bmp::bitmap_t &image, uint8_t threshold, U u) noexcept {
-		binarize(image, threshold, 0, 0, image.width - 1, image.height - 1, u);
-	}
+	
 
 
 

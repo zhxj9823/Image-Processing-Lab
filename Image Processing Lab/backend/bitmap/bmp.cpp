@@ -94,7 +94,9 @@ namespace bmp
 	}
 
 	 void bitmap_t::set_hsl_unchecked(size_t x, size_t y, hsl_t hsl) noexcept {
-		auto H = std::get<0>(hsl) / 255.0, S = std::get<1>(hsl) / 255.0, L = std::get<2>(hsl) / 255.0;
+		auto H = std::clamp(std::get<0>(hsl),0.0,255.0) / 255.0,
+			S = std::clamp(std::get<1>(hsl),0.0,255.0) / 255.0,
+			L = std::clamp(std::get<2>(hsl),0.0,255.0) / 255.0;
 		if (S == 0) {
 			set(x, y, make_RGB(L*255.0, L*255.0, L*255.0));
 		} else {

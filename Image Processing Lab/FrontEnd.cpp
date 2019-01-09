@@ -81,16 +81,7 @@ void ImGui::MyShow(bool *show_window)
 	static int opened = 0;
 	
 	static int saved = 0;
-	if (!saved && save_file)
-
-	{
-		GetSaveFileLocation(save_file_direction);		
-		if (save_file_direction[0] != 0)
-		{
-			std::cout << save_file_direction << std::endl;
-		}
-		save_file = false;
-	}
+	
 
 	if (show_image)
 		ShowImage(&show_image);
@@ -161,6 +152,13 @@ void ImGui::MyShow(bool *show_window)
 			}
 			if (ImGui::MenuItem("Save As..", "Ctrl+S",&save_file))
 			{
+				GetSaveFileLocation(save_file_direction);
+				if (save_file_direction[0] != 0)
+				{
+					middle.save(save_file_direction);
+					std::cout << save_file_direction << std::endl;
+				}
+				save_file = false;
 			}
 			if (ImGui::MenuItem("Quit", "Alt+F4"))
 			{
@@ -171,6 +169,9 @@ void ImGui::MyShow(bool *show_window)
 		if (ImGui::BeginMenu("Edit"))
 		{
 			ImGui::MenuItem("(Edit)", nullptr, false, false);
+			if (ImGui::MenuItem("Cancle")) {
+				middle.cancle();
+			}
 			if (ImGui::MenuItem("Undo", "CTRL+Z"))
 			{
 			}
@@ -353,6 +354,7 @@ static void ShowImage(bool *p_open)
 
 static void SaveImage(char *save_file_direction, bool *p_open)
 {
+	
 	return;
 }
 
@@ -370,7 +372,9 @@ static void LocalBinarization(bool *p_open)
 	ImGui::Begin("LocalBinarization", p_open);
 	ImGui::SliderInt("xnum", &xnum, 1, 32);
 	ImGui::SliderInt("ynum", &ynum, 1, 32);
-	
+	PreviewAndApply(middle, [&]() {
+		middle.local_adaptive_binarize(xnum, ynum);
+	});
 
 	ImGui::End();
 }
@@ -382,7 +386,9 @@ static void ManuallyBinarization(bool *p_open)
 	
 	ImGui::Begin("Manually Binarization", p_open);
 	ImGui::SliderInt("threshold", &threshold, 0, 255 );
-	
+	PreviewAndApply(middle, [&]() {
+		middle.binarize(threshold);
+		});
 	
 	ImGui::End();
 }
@@ -392,13 +398,16 @@ static void Rotate(bool *p_open)
 {
 	static float theta = 0;
 	static int x0 = 0, x1 = 0, y0 = 0, y1 = 0;
+	static int mode = 0;
 	ImGui::Begin("Rotate", p_open);
 	ImGui::SliderFloat("Theta", &theta, 0, 360);
 	ImGui::DragInt("X0", &x0,0,4096);
 	ImGui::DragInt("X1", &x1, 0, 4096);
 	ImGui::DragInt("Y0", &y0, 0, 4096);
 	ImGui::DragInt("Y1", &y1, 0, 4096);
-
+	PreviewAndApply(middle, [&]() {
+		middle.rotate(theta,x0,y0,x1,y1,mode);
+		});
 
 	ImGui::End();
 }
@@ -407,6 +416,7 @@ static void Scale(bool *p_open)
 {
 	static float sx = 0.01, sy = 0.01;
 	static int x0 = 0, x1 = 0, y0 = 0, y1 = 0;
+	static int mode = 0;
 	ImGui::Begin("Scale", p_open);
 	ImGui::SliderFloat("sx", &sx, 0.01, 100);
 	ImGui::SliderFloat("sy", &sy, 0.01, 100);
@@ -414,7 +424,9 @@ static void Scale(bool *p_open)
 	ImGui::DragInt("X1", &x1, 0, 4096);
 	ImGui::DragInt("Y0", &y0, 0, 4096);
 	ImGui::DragInt("Y1", &y1, 0, 4096);
-
+	PreviewAndApply(middle, [&]() {
+		middle.scale(sx,sy,x0,y0,x1,y1, mode);
+		});
 
 	ImGui::End();
 }
@@ -423,6 +435,7 @@ static void Translate(bool *p_open)
 {
 	static float dx = 0,dy = 0;
 	static int x0 = 0, x1 = 0, y0 = 0, y1 = 0;
+	static int mode = 0;
 	ImGui::Begin("Translate", p_open);
 	ImGui::SliderFloat("dx", &dx, -2048, +2048);
 	ImGui::SliderFloat("dy", &dy, -2048, +2048);
@@ -430,7 +443,9 @@ static void Translate(bool *p_open)
 	ImGui::DragInt("X1", &x1, 0, 4096);
 	ImGui::DragInt("Y0", &y0, 0, 4096);
 	ImGui::DragInt("Y1", &y1, 0, 4096);
-
+	PreviewAndApply(middle, [&]() {
+		middle.translate(dx,dy,x0,y0,x1,y1,mode);
+		});
 
 	ImGui::End();
 }
@@ -439,6 +454,7 @@ static void Shear(bool *p_open)
 { 
 	static float sx = 0.01, sy = 0.01;
 	static int x0 = 0, x1 = 0, y0 = 0, y1 = 0;
+	static int mode=0;
 	ImGui::Begin("Shear", p_open);
 	ImGui::SliderFloat("sx", &sx, 0.01, 100);
 	ImGui::SliderFloat("sy", &sy, 0.01, 100);
@@ -446,7 +462,9 @@ static void Shear(bool *p_open)
 	ImGui::DragInt("X1", &x1, 0, 4096);
 	ImGui::DragInt("Y0", &y0, 0, 4096);
 	ImGui::DragInt("Y1", &y1, 0, 4096);
-
+	PreviewAndApply(middle, [&]() {
+		middle.shear(sx,sy,x0,y0,x1,y1, mode);
+		});
 
 	ImGui::End();
 }
@@ -458,7 +476,9 @@ static void Mean(bool *p_open)
 	static int windowSize;
 	ImGui::Begin("Mean Filter", p_open);
 	ImGui::SliderInt("Window Size", &windowSize, 0, 10);
-
+	PreviewAndApply(middle, [&]() {
+		middle.mean(windowSize);
+		});
 	ImGui::End();
 }
 
@@ -467,7 +487,9 @@ static void Edge(bool *p_open)
 	static int windowSize;
 	ImGui::Begin("Edge Filter", p_open);
 	ImGui::SliderInt("Window Size", &windowSize, 0, 10);
-
+	PreviewAndApply(middle, [&]() {
+		middle.edge(windowSize);
+		});
 	ImGui::End();
 }
 
@@ -476,7 +498,9 @@ static void Lap(bool *p_open)
 	static int windowSize;
 	ImGui::Begin("Laplaician Filter", p_open);
 	ImGui::SliderInt("Window Size", &windowSize, 0, 10);
-
+	PreviewAndApply(middle, [&]() {
+		middle.lap(windowSize);
+		});
 	ImGui::End();
 }
 
@@ -487,7 +511,9 @@ static void Bilateral(bool *p_open)
 	ImGui::Begin("Bilateral Filter", p_open);
 	ImGui::SliderInt("Window Size", &windowSize, 0, 10);
 	ImGui::SliderFloat("Sigma", &sigma, 0, 10000);
-
+	PreviewAndApply(middle, [&]() {
+		middle.bilateral(windowSize, sigma);
+		});
 	ImGui::End();
 }
 

@@ -17,13 +17,13 @@ using utils::counter_2d;
 
 namespace process
 {
-	bmp::color_t color_round2(const std::tuple<double, double, double> &c) {
+	inline bmp::color_t color_round2(const std::tuple<double, double, double> &c) {
 		auto[r, g, b] = c;
 		const double t = 128;
 		return { std::clamp(lround(r + t),0l,255l),
 			std::clamp(lround(g + t),0l,255l),std::clamp(lround(b + t),0l,255l) };
 	}
-	bmp::bitmap_t fuse_image(const bmp::bitmap_t &image1, const bmp::bitmap_t &image2, double sign,double offset) {
+	inline bmp::bitmap_t fuse_image(const bmp::bitmap_t &image1, const bmp::bitmap_t &image2, double sign,double offset) {
 		if (image1.width != image2.width || image1.height != image2.height) {
 			throw "Different size";
 		}
@@ -55,7 +55,7 @@ namespace process
 		return rval;
 	}
 	
-	bmp::bitmap_t  mean_filter(const bmp::bitmap_t &image, size_t r) noexcept {
+	inline bmp::bitmap_t  mean_filter(const bmp::bitmap_t &image, int r) noexcept {
 		bmp::bitmap_t rval(image);
 		auto accessor_getter = [&rval](size_t x, size_t y) {
 			return pixel_accessor_t(rval, x, y);
@@ -70,7 +70,7 @@ namespace process
 		std::transform(lbegin, lend,lbegin,
 			[r, accessor_image, &image](auto &&p) {
 				auto[x, y] = p.pair();
-				auto x0 = std::max(x - r, 0ull), y0 = std::max(y - r, 0ull),
+				auto x0 = size_t(std::max(int(x) - r, 0)), y0 = size_t(std::max(int(y) - r, 0)),
 					x1 = std::min(x + r + 1, image.width), y1 = std::min(y + r + 1, image.height);
 				auto sum = std::make_tuple(0.0, 0.0, 0.0);
 
@@ -86,7 +86,7 @@ namespace process
 			});
 		return rval;
 	}
-	bmp::bitmap_t  laplaician_enhancement(const bmp::bitmap_t &image, size_t r) noexcept {
+	inline bmp::bitmap_t  laplaician_enhancement(const bmp::bitmap_t &image, int r) noexcept {
 		bmp::bitmap_t rval(image);
 		auto accessor_getter = [&rval](size_t x, size_t y) {
 			return pixel_accessor_t(rval, x, y);
@@ -101,7 +101,7 @@ namespace process
 		std::transform(lbegin, lend, lbegin,
 			[r, accessor_image, &image](auto &&p) {
 				auto[x, y] = p.pair();
-				auto x0 = std::max(x - r, 0ull), y0 = std::max(y - r, 0ull),
+				auto x0 = size_t(std::max(int(x) - r, 0)), y0 = size_t(std::max(int(y) - r, 0)),
 					x1 = std::min(x + r + 1, image.width), y1 = std::min(y + r + 1, image.height);
 				auto sum = std::make_tuple(0.0, 0.0, 0.0);
 
@@ -119,7 +119,7 @@ namespace process
 		return rval;
 	}
 
-	bmp::bitmap_t  laplaician_operator(const bmp::bitmap_t &image, size_t r) noexcept {
+	inline bmp::bitmap_t  laplaician_operator(const bmp::bitmap_t &image, int r) noexcept {
 		bmp::bitmap_t rval(image);
 		auto accessor_getter = [&rval](size_t x, size_t y) {
 			return pixel_accessor_t(rval, x, y);
@@ -134,7 +134,7 @@ namespace process
 		std::transform(lbegin, lend, lbegin,
 			[r, accessor_image, &image](auto &&p) {
 				auto[x, y] = p.pair();
-				auto x0 = std::max(x - r, 0ull), y0 = std::max(y - r, 0ull),
+				auto x0 = size_t(std::max(int(x) - r, 0)), y0 = size_t(std::max(int(y) - r, 0)),
 					x1 = std::min(x + r + 1, image.width), y1 = std::min(y + r + 1, image.height);
 				auto sum = std::make_tuple(0.0, 0.0, 0.0);
 
@@ -167,7 +167,7 @@ namespace process
 			(r2+g2+b2) / (2 * square(sigma_s)));
 	}
 	//
-	bmp::bitmap_t  bilateral_filter(const bmp::bitmap_t &image, size_t r, double sigma_r) noexcept {
+	inline bmp::bitmap_t  bilateral_filter(const bmp::bitmap_t &image, int r, double sigma_r) noexcept {
 		bmp::bitmap_t rval(image);
 		
 		auto[clbegin, clend] = counter_2d<size_t>::make(0, 0,
@@ -176,7 +176,7 @@ namespace process
 		std::for_each(std::execution::par_unseq, clbegin, clend,
 			[&r, &image, &sigma_r, &rval](auto &&p) {
 				auto[x, y] = p;
-				auto x0 = std::max(x - r, 0ull), y0 = std::max(y - r, 0ull),
+				auto x0 = size_t(std::max(int(x) - r, 0)), y0 = size_t(std::max(int(y) - r, 0)),
 					x1 = std::min(x + r + 1, image.width), y1 = std::min(y + r + 1, image.height);
 				auto sum = std::make_tuple(0.0, 0.0, 0.0);
 

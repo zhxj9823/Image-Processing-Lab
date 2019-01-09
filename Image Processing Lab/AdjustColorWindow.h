@@ -51,7 +51,7 @@ public:
 		enable = false;
 	}
 	virtual void apply(double a, double b, double c) {
-
+		middle->rgb_adjust(a, b, c);
 	}
 };
 
@@ -69,7 +69,7 @@ public:
 		enable = false;
 	}
 	virtual void apply(double a, double b, double c) {
-
+		middle->hsl_adjust(a, b, c);
 	}
 };
 
@@ -90,6 +90,20 @@ public:
 
 	}
 };
+
+template<typename U>
+inline void PreviewAndApply(MiddleLayer &middle,U u) {
+	if (ImGui::Button("Apply"))
+	{
+		middle.apply([&]() {
+			u();
+		});
+	}
+	if (ImGui::Button("Preview"))
+	{
+		u();
+	}
+}
 
 
 #endif
