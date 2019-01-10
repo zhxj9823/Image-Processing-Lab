@@ -111,23 +111,20 @@ public:
 		load_texture(preview_image);
 	}
 	void erose() {
-		preview_image = bmp::bitmap_t(current_image);
-		process::erose(preview_image);
+		
+		preview_image=process::erose(current_image);
 		load_texture(preview_image);
 	}
 	void dialte() {
-		preview_image = bmp::bitmap_t(current_image);
-		process::dilate(preview_image);
+		preview_image = process::dilate(current_image);
 		load_texture(preview_image);
 	}
 	void opening() {
-		preview_image = bmp::bitmap_t(current_image);
-		process::open(preview_image);
+		preview_image = process::open(current_image);
 		load_texture(preview_image);
 	}
 	void closing() {
-		preview_image = bmp::bitmap_t(current_image);
-		process::close(preview_image);
+		preview_image = process::close(current_image);
 		load_texture(preview_image);
 	}
 	void logarithmic() {
@@ -189,40 +186,40 @@ public:
 		preview_image = bmp::bitmap_t(current_image);
 		if(mode == 0)
 			process::transform<process::nearest_neighbor_t>(preview_image, 
-				x0, y0, x1 - x0+1, y1 - y0+1, transform2D_t::rotate(theta));
+				x0, y0, x1, y1, transform2D_t::rotate(theta));
 		else
 			process::transform<process::bilinear_t>(preview_image,
-				x0, y0, x1 - x0 + 1, y1 - y0 + 1, transform2D_t::rotate(theta));
+				x0, y0, x1 , y1 , transform2D_t::rotate(theta));
 		load_texture(preview_image);
 	}
 	void scale(float sx, float sy, int x0, int y0, int x1, int y1,int mode) {
 		preview_image = bmp::bitmap_t(current_image);
 		if (mode == 0)
 			process::transform<process::nearest_neighbor_t>(preview_image,
-				x0, y0, x1 - x0 + 1, y1 - y0 + 1, transform2D_t::scale(sx,sy));
+				x0, y0, x1 , y1 , transform2D_t::scale(sx,sy));
 		else
 			process::transform<process::bilinear_t>(preview_image,
-				x0, y0, x1 - x0 + 1, y1 - y0 + 1, transform2D_t::scale(sx,sy));
+				x0, y0, x1 , y1, transform2D_t::scale(sx,sy));
 		load_texture(preview_image);
 	}
 	void shear(float sx, float sy, int x0, int y0, int x1, int y1,int mode) {
 		preview_image = bmp::bitmap_t(current_image);
 		if (mode == 0)
 			process::transform<process::nearest_neighbor_t>(preview_image,
-				x0, y0, x1 - x0 + 1, y1 - y0 + 1, transform2D_t::shear(sx,sy));
+				x0, y0, x1, y1 , transform2D_t::shear(sx,sy));
 		else
 			process::transform<process::bilinear_t>(preview_image,
-				x0, y0, x1 - x0 + 1, y1 - y0 + 1, transform2D_t::shear(sx,sy));
+				x0, y0, x1, y1 , transform2D_t::shear(sx,sy));
 		load_texture(preview_image);
 	}
 	void translate(float dx, float dy, int x0, int y0, int x1, int y1, int mode) {
 		preview_image = bmp::bitmap_t(current_image);
 		if (mode == 0)
 			process::transform<process::nearest_neighbor_t>(preview_image,
-				x0, y0, x1 - x0 + 1, y1 - y0 + 1, transform2D_t::translate(dx,dy));
+				x0, y0, x1 , y1 , transform2D_t::translate(dx,dy));
 		else
 			process::transform<process::bilinear_t>(preview_image,
-				x0, y0, x1 - x0 + 1, y1 - y0 + 1, transform2D_t::translate(dx,dy));
+				x0, y0, x1 , y1 , transform2D_t::translate(dx,dy));
 		load_texture(preview_image);
 	}
 	void cancle() {
