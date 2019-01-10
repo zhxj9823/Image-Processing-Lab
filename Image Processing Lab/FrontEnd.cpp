@@ -402,9 +402,9 @@ static void Rotate(bool *p_open)
 	ImGui::Begin("Rotate", p_open);
 	ImGui::SliderFloat("Theta", &theta, 0, 360);
 	ImGui::DragInt("X0", &x0,0,4096);
-	ImGui::DragInt("X1", &x1, 0, 4096);
 	ImGui::DragInt("Y0", &y0, 0, 4096);
-	ImGui::DragInt("Y1", &y1, 0, 4096);
+	ImGui::DragInt("W", &x1, 0, 4096);
+	ImGui::DragInt("H", &y1, 0, 4096);
 	PreviewAndApply(middle, [&]() {
 		middle.rotate(theta,x0,y0,x1,y1,mode);
 		});
@@ -421,9 +421,9 @@ static void Scale(bool *p_open)
 	ImGui::SliderFloat("sx", &sx, 0.01, 100);
 	ImGui::SliderFloat("sy", &sy, 0.01, 100);
 	ImGui::DragInt("X0", &x0, 0, 4096);
-	ImGui::DragInt("X1", &x1, 0, 4096);
 	ImGui::DragInt("Y0", &y0, 0, 4096);
-	ImGui::DragInt("Y1", &y1, 0, 4096);
+	ImGui::DragInt("W", &x1, 0, 4096);
+	ImGui::DragInt("H", &y1, 0, 4096);
 	PreviewAndApply(middle, [&]() {
 		middle.scale(sx,sy,x0,y0,x1,y1, mode);
 		});
@@ -440,9 +440,9 @@ static void Translate(bool *p_open)
 	ImGui::SliderFloat("dx", &dx, -2048, +2048);
 	ImGui::SliderFloat("dy", &dy, -2048, +2048);
 	ImGui::DragInt("X0", &x0, 0, 4096);
-	ImGui::DragInt("X1", &x1, 0, 4096);
 	ImGui::DragInt("Y0", &y0, 0, 4096);
-	ImGui::DragInt("Y1", &y1, 0, 4096);
+	ImGui::DragInt("W", &x1, 0, 4096);
+	ImGui::DragInt("H", &y1, 0, 4096);
 	PreviewAndApply(middle, [&]() {
 		middle.translate(dx,dy,x0,y0,x1,y1,mode);
 		});
@@ -459,9 +459,9 @@ static void Shear(bool *p_open)
 	ImGui::SliderFloat("sx", &sx, 0.01, 100);
 	ImGui::SliderFloat("sy", &sy, 0.01, 100);
 	ImGui::DragInt("X0", &x0, 0, 4096);
-	ImGui::DragInt("X1", &x1, 0, 4096);
 	ImGui::DragInt("Y0", &y0, 0, 4096);
-	ImGui::DragInt("Y1", &y1, 0, 4096);
+	ImGui::DragInt("W", &x1, 0, 4096);
+	ImGui::DragInt("H", &y1, 0, 4096);
 	PreviewAndApply(middle, [&]() {
 		middle.shear(sx,sy,x0,y0,x1,y1, mode);
 		});
