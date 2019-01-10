@@ -405,7 +405,7 @@ static void CreateTempImage(const char *file_direction, const char *new_file_dir
 static void LocalBinarization(bool *p_open)
 {
 	int image_width, image_height;
-	static int xnum, ynum;
+	static int xnum=1, ynum=1;
 	
 	ImGui::Begin("LocalBinarization", p_open);
 	ImGui::SliderInt("xnum", &xnum, 1, 32);
