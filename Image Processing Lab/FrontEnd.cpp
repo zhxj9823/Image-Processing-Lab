@@ -35,8 +35,15 @@ static void Mean(bool *p_open);
 static void Edge(bool *p_open);
 static void Lap(bool *p_open);
 static void Bilateral(bool *p_open);
+static void Water(bool *p_open);
+static void Smooth(bool *p_open);
+static void Bayer(bool *p_open);
 static void ShowHelp(bool *p_open);
 static void ShowAbout(bool *p_open);
+
+bool open_water = 1;
+bool open_smooth = 1;
+bool open_bayer = 1;
 
 MiddleLayer middle;
 
@@ -58,8 +65,15 @@ void ImGui::MyShow(bool *show_window)
 	static bool enable_edge = false;
 	static bool enable_lap = false;
 	static bool enable_bilateral = false;
+	static bool enable_water = false;
+	static bool enable_smooth = false;
+	static bool enable_bayer = false;
 	static bool enable_help = false;
 	static bool enable_about = false;
+
+	static bool open_water = 1;
+	bool open_smooth = 1;
+	bool open_bayer = 1;
 
 	
 	static char save_file_direction[1024];
@@ -79,7 +93,6 @@ void ImGui::MyShow(bool *show_window)
 	static HSLHistogramWindow HSLHistogramInfo(&middle);
 	static RGBHistogramWindow RGBHistogramInfo(&middle);
 	static int opened = 0;
-	
 	static int saved = 0;
 	
 
@@ -96,8 +109,10 @@ void ImGui::MyShow(bool *show_window)
 
 	AutoBinarizationApplier.render();
 	
-	if (enable_local_binarization) LocalBinarization(&enable_local_binarization);
-	if (enable_manually_binarization) ManuallyBinarization(&enable_manually_binarization);
+	if (enable_local_binarization) 
+		LocalBinarization(&enable_local_binarization);
+	if (enable_manually_binarization) 
+		ManuallyBinarization(&enable_manually_binarization);
 
 	EroseApplier.render();
 	DilateApplier.render();
@@ -105,10 +120,14 @@ void ImGui::MyShow(bool *show_window)
 	OpeningApplier.render();
 	
 
-	if (enable_rotate) Rotate(&enable_rotate);
-	if (enable_scale) Scale(&enable_scale);
-	if (enable_translate) Translate(&enable_translate);
-	if (enable_shear) Shear(&enable_shear);
+	if (enable_rotate)
+		Rotate(&enable_rotate);
+	if (enable_scale) 
+		Scale(&enable_scale);
+	if (enable_translate) 
+		Translate(&enable_translate);
+	if (enable_shear) 
+		Shear(&enable_shear);
 
 	RGBHistogramEqualizationApplier.render();
 	HSLHistogramEqualizationApplier.render();
@@ -117,10 +136,20 @@ void ImGui::MyShow(bool *show_window)
 	RGBHistogramInfo.render();
 	LogarithmicApplier.render();
 	
-	if (enable_mean) Mean(&enable_mean);
-	if (enable_edge) Edge(&enable_edge);
-	if (enable_lap) Lap(&enable_lap);
-	if (enable_bilateral) Bilateral(&enable_bilateral);
+	if (enable_mean) 
+		Mean(&enable_mean);
+	if (enable_edge) 
+		Edge(&enable_edge);
+	if (enable_lap) 
+		Lap(&enable_lap);
+	if (enable_bilateral) 
+		Bilateral(&enable_bilateral);
+	if (enable_water)
+		Water(&enable_water);
+	if (enable_smooth)
+		Smooth(&enable_smooth);
+	if (enable_bayer)
+		Bayer(&enable_bayer);
 
 	if (enable_help)
 		ShowHelp(&enable_help);
@@ -263,6 +292,15 @@ void ImGui::MyShow(bool *show_window)
 			{
 			}
 			if (ImGui::MenuItem("Bilateral Filter", nullptr, &enable_bilateral))
+			{
+			}
+			if (ImGui::MenuItem("Water Filter", nullptr, &enable_water))
+			{
+			}
+			if (ImGui::MenuItem("Run Length Smoothing", nullptr, &enable_smooth))
+			{
+			}
+			if (ImGui::MenuItem("Bayer Filter", nullptr, &enable_bayer))
 			{
 			}
 			ImGui::EndMenu();
@@ -516,6 +554,109 @@ static void Bilateral(bool *p_open)
 		});
 	ImGui::End();
 }
+
+
+static void Water(bool *p_open)
+{
+	static int hctr = 0, hatb = 0, vctb = 0, vatb = 0;
+	ImGui::Begin("WaterWave Filter", 0, 0);
+
+	ImGui::SliderInt("horCountTrackBar", &hctr, 3, 50);
+	ImGui::SliderInt("horAmplitudeTrackBar", &hatb, 2, 50);
+	ImGui::SliderInt("vertCountTrackBar", &vctb, 3, 50);
+	ImGui::SliderInt("vertAmplitudeTrackBar", &vatb, 2, 50);
+	static float v[] = { 0 };
+	ImGui::DragFloat("regulatory factor", v);
+	if (open_water)
+	{
+		int result = MessageBoxA(NULL, TEXT("Sorry, this system cannot be implemented due to system or version problems."), NULL, MB_ICONERROR | MB_OK);
+		open_water = 0;
+		switch (result)
+		{
+			case IDOK:
+				break;
+		}
+	}
+	ImGui::End();
+}
+
+static void Smooth(bool *p_open)
+{
+	static bool enable_process = 0;
+	static int gap = 0;
+	ImGui::Begin("Run Length Smoothing");
+	ImGui::TreeNode("Checkbox");
+	ImGui::Checkbox("Process Gaps With Image Borders", &enable_process);
+	ImGui::TreeNode("Slider");
+	ImGui::VSliderInt("Maximum gap", ImVec2(640, 360), &gap, 0, 100);
+	if (open_smooth)
+	{
+		int result = MessageBoxA(NULL, TEXT("Sorry, this system cannot be implemented due to system or version problems."), NULL, MB_ICONERROR | MB_OK);
+		open_smooth = 0;
+		switch (result)
+		{
+			case IDOK:
+				break;
+		}
+	}
+	ImGui::End();
+}
+
+static void Bayer(bool *p_open)
+{
+	static bool enable_grbr = 0, enable_gbbr = 0;
+	const char *text = "Mosaic type";
+	ImGui::Begin("Bayer Filter");
+	ImGui::TreeNode(text);
+	ImGui::Selectable("GRBR", &enable_grbr, 0, ImVec2(0, 0));
+	ImGui::Selectable("GBBR", &enable_gbbr, 0, ImVec2(0, 0));
+
+	if (enable_grbr)
+	{
+		static float my_color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		ImGui::ColorEdit4("Color", my_color);
+
+		// Plot some values
+		const float my_values[] = { 0.2f, 0.1f, 1.0f, 0.5f, 0.9f, 2.2f };
+		ImGui::PlotLines("Frame Times", my_values, IM_ARRAYSIZE(my_values));
+
+		// Display contents in a scrolling region
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Important Stuff");
+		ImGui::BeginChild("Scrolling");
+		for (int n = 0; n < 50; n++)
+			ImGui::Text("%04d: Success!", n);
+		ImGui::EndChild();
+	}
+	if (enable_gbbr)
+	{
+		static float my_color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		ImGui::ColorEdit4("Color", my_color);
+
+		// Plot some values
+		const float my_values[] = { 0.2f, 0.1f, 1.0f, 0.5f, 0.9f, 2.2f };
+		ImGui::PlotLines("Frame Times", my_values, IM_ARRAYSIZE(my_values));
+
+		// Display contents in a scrolling region
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Important Stuff");
+		ImGui::BeginChild("Scrolling");
+		for (int n = 0; n < 50; n++)
+			ImGui::Text("%04d: Success!", n);
+
+		if (open_bayer)
+		{
+			int result = MessageBoxA(NULL, TEXT("Sorry, this system cannot be implemented due to system or version problems."), NULL, MB_ICONERROR | MB_OK);
+			open_bayer = 0;
+			switch (result)
+			{
+			case IDOK:
+				break;
+			}
+		}
+		ImGui::EndChild();
+	}
+	ImGui::End();
+}
+
 
 static void ShowHelp(bool *p_open)
 {
